@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using Business_Access_Layer.Interface.Category;
-using Bussiness_Access_Layer.Service.ImageUpload;
+using Business_Access_Layer.Service.ImageUpload;
 using Data_Access_Layer.Data;
+using Data_Access_Layer.Migrations;
 using Data_Access_Layer.Models.CategoryModel;
 using DTO_Layer.DTOsModels.CategoryModelDTO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Business_Access_Layer.Service.Category
 {
@@ -17,42 +20,70 @@ namespace Business_Access_Layer.Service.Category
     {
         private readonly Context _context;
         private readonly IMapper _mapper;
-        private readonly CategoryImage _image;
+        private readonly ImageUtility _image;
 
-        public CategoryService(Context context, IMapper mapper, IHttpContextAccessor httpContextAccessor, CategoryImage image)
+        public CategoryService(Context context, IMapper mapper, IHttpContextAccessor httpContextAccessor, ImageUtility image)
         {
             _context = context;
             _mapper = mapper;
             _image = image;
         }
-        public async Task<string> CreateCategory(CategoryDTO category, IFormFile image)
+
+        public async Task<string> CategoryCreate(CategoryDTO category)
         {
+            // Check if both category and base64String are provided
+            if (category == null || string.IsNullOrEmpty(category.Image))
+            {
+                return "Failed";
+            }
+
             var response = "";
 
             try
             {
-                byte[] imageBytes;
-                using (var memoryStream = new MemoryStream())
-                {
-                    await image.CopyToAsync(memoryStream);
-                    imageBytes = memoryStream.ToArray();
-                }
-
-                var filepath = await _image.UploadCategoryFile(image);
+                var filepath = _image.SaveBase64Image(category.Image);
                 category.Image = filepath;
 
+                if (string.IsNullOrEmpty(filepath))
+                {
+                    return "Failed"; // Image saving failed
+                }
+
                 var CatEntity = _mapper.Map<CategoryApi>(category);
+                CatEntity.Id = Guid.NewGuid(); // Generate a new Guid
+                CatEntity.Image = filepath; // Assign image file path to entity property
+
                 _context.Categories.Add(CatEntity);
                 _context.SaveChanges();
 
-                response = "Success";
-                return response;
+                return "Success";
             }
-            catch (Exception)
+            catch(Exception ex)
             {
-                response = "Failed";
-                return response;
+                Console.WriteLine($"Error creating category: {ex.Message}");
+                return "Failed";
             }
+        }
+
+        public List<CategoryApi> GetCategories()
+        {
+            //if you want to get list of categories with object
+
+            //var data = _context.Categories.Select(a => new CategoryApi
+            //    {
+            //    Id = a.Id,
+            //    AdminId = a.AdminId,
+            //    Name = a.Name,
+            //    Image = a.Image
+            //}).ToList();
+            //return data;
+
+            //if you want to get list of categories with mapper
+
+            var categories = _context.Categories.ToList();
+            // Perform mapping using AutoMapper
+            var data = _mapper.Map<List<CategoryApi>>(categories);
+            return data;
         }
     }
 }

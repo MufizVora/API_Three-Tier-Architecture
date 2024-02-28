@@ -11,13 +11,11 @@ namespace DTO_Layer.DTOsModels.CategoryModelDTO
     {
         public Guid Id { get; set; }
 
-
         public string? AdminId { get; set; }
 
 
         [Required(ErrorMessage = "Category Name Is Required")]
         public string? Name { get; set; }
-
 
         public string? Image { get; set; }
     }

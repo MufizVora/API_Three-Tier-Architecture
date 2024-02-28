@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Data_Access_Layer.Models.CategoryModel;
 using Data_Access_Layer.Models.UserModel;
+using DTO_Layer.DTOsModels.CategoryModelDTO;
 using DTO_Layer.DTOsModels.UserModelDTO;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,7 @@ namespace Business_Access_Layer.Mapper
         public AutoMapperProfile()
         {
             CreateMap<UserApi, UserRegDTO>().ReverseMap();
+            CreateMap<CategoryApi, CategoryDTO>().ReverseMap();
         }
     }
 }

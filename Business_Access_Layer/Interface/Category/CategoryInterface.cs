@@ -5,11 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Data_Access_Layer.Models.CategoryModel;
 
 namespace Business_Access_Layer.Interface.Category
 {
     public interface CategoryInterface
     {
-        Task<string> CreateCategory(CategoryDTO category, IFormFile image);
+        Task<string> CategoryCreate(CategoryDTO category);
+
+        public List<CategoryApi> GetCategories();
+
     }
 }

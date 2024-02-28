@@ -15,13 +15,11 @@ namespace Data_Access_Layer.Models.CategoryModel
 
         public Guid Id { get; set; }
 
-
         public string? AdminId { get; set; }
 
 
         [Required(ErrorMessage ="Category Name Is Required")]
         public string? Name { get; set; }
-
 
         public string? Image {  get; set; }
     }
