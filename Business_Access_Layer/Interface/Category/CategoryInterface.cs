@@ -16,5 +16,11 @@ namespace Business_Access_Layer.Interface.Category
 
         public List<CategoryApi> GetCategories();
 
+        public CategoryApi GetCategoryData(Guid id);
+
+        Task<string> CategoryEdit(CategoryDTO category);
+
+        public string CategoryDelete(Guid id, string adminId);
+
     }
 }
