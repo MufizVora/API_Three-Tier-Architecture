@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Business_Access_Layer.Interface.User;
 using Data_Access_Layer.Data;
+using Data_Access_Layer.Migrations;
+using Data_Access_Layer.Models.CategoryModel;
 using Data_Access_Layer.Models.UserModel;
 using DTO_Layer.DTOsModels.UserModelDTO;
 using System;
@@ -200,6 +202,53 @@ namespace Business_Access_Layer.Service.User
             {
                 response.Message = "Failed";
                 return response;
+            }
+        }
+
+        public List<UserApi> GetUsers()
+        {
+            var Users = _context.Users.ToList();
+            // Perform mapping using AutoMapper
+            var data = _mapper.Map<List<UserApi>>(Users);
+            return data;
+        }
+
+        public UserApi GetUserData(Guid id)
+        {
+            var data = _context.Users.FirstOrDefault(a => a.Id == id);
+            return data;
+        }
+
+        public string UserDelete(Guid id)
+        {
+            var response = "";
+
+            try
+            {
+                var user = _context.Users.Any(a => a.Id == id);
+
+                if(user)
+                {
+                    //Find the user by Id
+                    var userdelete = _context.Users.Find(id);
+
+                    if (userdelete != null)
+                    {
+                        _context.Users.Remove(userdelete);
+                        _context.SaveChanges();
+
+                        response = "Success";
+                    }
+                    else
+                    {
+                        response = "Failed To Delete User";
+                    }
+                }
+                return response;
+            }
+            catch
+            {
+                return "Failed";
             }
         }
     }

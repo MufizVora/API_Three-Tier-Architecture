@@ -16,7 +16,9 @@ namespace Web_API.Controllers.User
             _userInterface = userInterface;
         }
 
-        [HttpPost("register")]
+        //Without specifying route you can give route name by yourself
+        //[HttpPost("register")]
+        [HttpPost]
         public IActionResult User_Register(UserRegDTO user)
         {
             try
@@ -42,7 +44,7 @@ namespace Web_API.Controllers.User
             }
         }
 
-        [HttpPost("login")]
+        [HttpPost]
         public IActionResult User_Login(UserLogDTO user)
         {
             var response = new UserResponseDTO();
@@ -73,6 +75,36 @@ namespace Web_API.Controllers.User
 
                 // Return a generic error message
                 return StatusCode(500, new { mesaage = "An Error occurred while processing your request. Please try again later." });
+            }
+        }
+        [HttpGet]
+        public IActionResult ListUser()
+        {
+            var Users = _userInterface.GetUsers();
+            return Ok(Users);
+        }
+     
+        [HttpPost]
+        public IActionResult UserDelete(Guid id)
+        {
+            var response = "";
+
+            try
+            {
+                response = _userInterface.UserDelete(id);
+
+                if (response == "Success")
+                {
+                    return Json(new { message = "Successfully Deleted User." });
+                }
+                else
+                {
+                    return BadRequest(new { message = "There is something wrong! try again later." });
+                }
+            }
+            catch(Exception)
+            {
+                return StatusCode(500, new { message = "An Error occurred while processing your request. Please try again later." });
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using DTO_Layer.DTOsModels.UserModelDTO;
+﻿using Data_Access_Layer.Models.UserModel;
+using DTO_Layer.DTOsModels.UserModelDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,5 +36,11 @@ namespace Business_Access_Layer.Interface.User
         //public bool IsPasswordValid(string password);
 
         public UserResponseDTO Login(string email, string password);
+
+        public List<UserApi> GetUsers();
+
+        public UserApi GetUserData(Guid id);
+
+        public string UserDelete(Guid id);
     }
 }
