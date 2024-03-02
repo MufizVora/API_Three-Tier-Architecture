@@ -24,7 +24,7 @@ namespace Business_Access_Layer.Validation
 
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Category name is required")
-                .Must(BeUniqueName).WithMessage("Category name already exists")
+                .Must((dto, name) => BeUniqueName(name, dto)).WithMessage("Category name already exists")
                 .MaximumLength(50).WithMessage("Category name must not exceed 50 characters");
 
 
@@ -32,11 +32,26 @@ namespace Business_Access_Layer.Validation
                 .NotEmpty().WithMessage("Image is required")
                 .Must(BeValidBase64Image).WithMessage("Image must be a valid JPG or PNG image.");
         }
-        private bool BeUniqueName(string name)
+        private bool BeUniqueName(string name, CategoryDTO category)
         {
+            // Get the current category from the context
+            var currentCategory = _context.Categories.FirstOrDefault(c => c.Id == category.Id);
+
+            var existingCategory = _context.Categories.Find(category.Id);
+
+            if (existingCategory != null)
+            {
+                existingCategory.Name = category.Name; // Assuming there's a Name property in CategoryApi
+                existingCategory.AdminId = category.AdminId;
+            }
+            // If the category doesn't exist or the name is unchanged, it's considered unique
+            if (currentCategory == null || currentCategory.Name == name)
+                return true;
+
             // Check if a category with the given name already exists in the database
             return !_context.Categories.Any(c => c.Name == name);
         }
+
         private bool BeValidBase64Image(string base64Image)
         {
             if (string.IsNullOrWhiteSpace(base64Image))
