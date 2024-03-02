@@ -6,6 +6,9 @@ using Business_Access_Layer.Service.ImageUpload;
 using Business_Access_Layer.Service.User;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Business_Access_Layer.Validation;
 
 namespace Bussiness_Access_Layer.BussinessInjection
 {
@@ -18,6 +21,10 @@ namespace Bussiness_Access_Layer.BussinessInjection
             builder.AddScoped<CategoryInterface, CategoryService>();
             builder.AddScoped<ImageUtility>();
             builder.AddHttpContextAccessor();
+            builder.AddFluentValidationAutoValidation();
+            builder.AddValidatorsFromAssemblyContaining<RegisterValidator>();
+            builder.AddValidatorsFromAssemblyContaining<LoginValidator>();
+            builder.AddValidatorsFromAssemblyContaining<CategoryValidator>();
         }
     }
 }

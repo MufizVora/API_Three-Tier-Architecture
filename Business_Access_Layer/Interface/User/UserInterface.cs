@@ -13,26 +13,26 @@ namespace Business_Access_Layer.Interface.User
         public string Registration(UserRegDTO user);
 
         //This is how you would check whether a user is valid.
-        public bool IsUserValid(UserRegDTO user, out string errorMessage);
+        //public bool IsUserValid(UserRegDTO user, out string errorMessage);
 
         //You can check if anyone's already signed up with the same info. 
-        public bool IsDuplicateUser(string name, string email);
+        //public bool IsDuplicateUser(string name, string email);
 
         //This is how the system determines whether an email address is valid.
-        public bool IsValidEmail(string email);
+        //public bool IsValidEmail(string email);
 
         //The system checks if a character contains characters from the uppercase English alphabet (a-z).
-        public bool ContainsUppercase(string input);
+        //public bool ContainsUppercase(string input);
 
         //The system checks if a character contains characters from the lowercase English alphabet (a-z).
 
-        public bool ContainsLowercase(string input);
+        //public bool ContainsLowercase(string input);
 
         // The system checks if a string contains at least one digit (0-9, including Roman numerals).
-        public bool ContainsDigit(string input);
+        //public bool ContainsDigit(string input);
 
 
-        public bool IsPasswordValid(string password);
+        //public bool IsPasswordValid(string password);
 
         public UserResponseDTO Login(string email, string password);
     }
