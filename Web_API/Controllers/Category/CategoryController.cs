@@ -23,6 +23,10 @@ namespace Web_API.Controllers.Category
         public IActionResult ListCategory()
         {
             var categories = _categoryInterface.GetCategories();
+            if (categories == null || !categories.Any())
+            {
+                return BadRequest("No categories found.");
+            }
             return Ok(categories);
         }
 
@@ -53,6 +57,10 @@ namespace Web_API.Controllers.Category
         public IActionResult DetailCategory(Guid id)
         {
             var Categories = _categoryInterface.GetCategoryData(id);
+            if (Categories == null)
+            {
+                return BadRequest("Category not found.");
+            }
             return Ok(Categories);
         }
         [HttpPost]

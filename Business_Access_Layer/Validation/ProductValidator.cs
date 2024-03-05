@@ -60,7 +60,7 @@ namespace Business_Access_Layer.Validation
                 return false;
 
             // Check if the string is a valid base64 string
-            var base64Regex = new Regex(@"^(data:image\/[a-zA-Z]+;base64,)[\w\+\/\=]+$");
+            var base64Regex = new Regex(@"data:image/(?<type>.+?),(?<data>.+)");
             return base64Regex.IsMatch(image);
         }
         private async Task<bool> BeUniqueProductName(string? productName)

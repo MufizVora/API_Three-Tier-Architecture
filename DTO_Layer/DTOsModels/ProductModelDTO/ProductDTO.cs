@@ -9,6 +9,8 @@ namespace DTO_Layer.DTOsModels.ProductModelDTO
 {
     public class ProductDTO
     {
+        public Guid Id { get; set; }
+
         public string? AdminId { get; set; }
 
         public int CategoryId { get; set; }

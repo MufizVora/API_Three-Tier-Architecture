@@ -9,6 +9,8 @@ namespace DTO_Layer.DTOsModels.UserModelDTO
 {
     public class UserLogDTO
     {
+        public Guid Id { get; set; }
+
 
         [Required(ErrorMessage = "Enter Your Email Address")]
         public string? Email { get; set; }
