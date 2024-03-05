@@ -1,21 +1,14 @@
-﻿using Data_Access_Layer.Models.CategoryModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data_Access_Layer.Models.ProductModel
+namespace DTO_Layer.DTOsModels.ProductModelDTO
 {
-    [Table("Api_Product")]
-    public class ProductApi
+    public class ProductDTO
     {
-        [Key]
-
-        public Guid Id { get; set; }
-
         public string? AdminId { get; set; }
 
         public int CategoryId { get; set; }
@@ -24,7 +17,7 @@ namespace Data_Access_Layer.Models.ProductModel
 
 
         [Required(ErrorMessage = "Product Name Is Required")]
-        public string? ProductName { get; set;}
+        public string? ProductName { get; set; }
 
         public int ProductPrice { get; set; }
 
@@ -34,7 +27,6 @@ namespace Data_Access_Layer.Models.ProductModel
 
         public string? ProductDescription { get; set; }
 
-        public string? Image {  get; set; }
-
+        public string? Image { get; set; }
     }
 }

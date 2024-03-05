@@ -52,8 +52,8 @@ namespace Business_Access_Layer.Validation
             bool isDuplicate = data != null && data.Any();
             return isDuplicate;
 
-            // var data = _context.Users.Where(u => u.Name == name || u.Email == email);
-            // return data.Any();
+            //var data = _context.Users.Where(u => u.Name == name || u.Email == email);
+            //return data.Any();
         }
         public bool IsValidEmail(string email)
         {

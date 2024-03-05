@@ -194,7 +194,7 @@ namespace Business_Access_Layer.Service.User
                 }
                 else
                 {
-                    response.Message = "Invalid Email or Password";
+                    response.Message = "Invalid Credentials";
                 }
                 return response;
             }

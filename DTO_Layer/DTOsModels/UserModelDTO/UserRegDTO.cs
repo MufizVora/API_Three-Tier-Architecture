@@ -9,8 +9,6 @@ namespace DTO_Layer.DTOsModels.UserModelDTO
 {
     public class UserRegDTO
     {
-        public Guid Id { get; set; }
-
 
         [Required(ErrorMessage = "Enter Your UserName")]
         public string? Name { get; set; }

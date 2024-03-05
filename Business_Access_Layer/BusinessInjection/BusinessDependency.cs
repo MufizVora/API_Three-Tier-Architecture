@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Business_Access_Layer.Validation;
+using Business_Access_Layer.Interface.Product;
+using Business_Access_Layer.Service.Product;
 
 namespace Bussiness_Access_Layer.BussinessInjection
 {
@@ -25,6 +27,9 @@ namespace Bussiness_Access_Layer.BussinessInjection
             builder.AddValidatorsFromAssemblyContaining<RegisterValidator>();
             builder.AddValidatorsFromAssemblyContaining<LoginValidator>();
             builder.AddValidatorsFromAssemblyContaining<CategoryValidator>();
+            builder.AddScoped<ProductInterface, ProductService>();
+            builder.AddScoped<MultipleImageUtility>();
+            builder.AddHttpContextAccessor();
         }
     }
 }

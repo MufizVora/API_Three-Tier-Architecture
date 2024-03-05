@@ -22,8 +22,10 @@ namespace Business_Access_Layer.Validation
                .NotEmpty().WithMessage("Enter Your Email Address")
                .EmailAddress().WithMessage("Invalid Email Address");
 
+
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Enter Your Password");
+
         }
     }
 }

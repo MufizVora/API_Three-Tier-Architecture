@@ -1,4 +1,5 @@
 ﻿using Data_Access_Layer.Models.CategoryModel;
+using Data_Access_Layer.Models.ProductModel;
 using Data_Access_Layer.Models.UserModel;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,5 +23,7 @@ namespace Data_Access_Layer.Data
 
         //Here, I have created a DbSet property called Categories in a class. This property represents a collection of CategoryApi entities in a database, allowing you to interact with them using Entity Framework in your .NET application.
         public DbSet<CategoryApi> Categories { get; set; }
+
+        public DbSet<ProductApi> Products { get; set; }
     }
 }

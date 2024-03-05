@@ -1,4 +1,5 @@
-﻿using Business_Access_Layer.Interface.User;
+﻿using Business_Access_Layer.Interface.Category;
+using Business_Access_Layer.Interface.User;
 using Business_Access_Layer.Service.User;
 using DTO_Layer.DTOsModels.UserModelDTO;
 using Microsoft.AspNetCore.Mvc;
@@ -83,7 +84,12 @@ namespace Web_API.Controllers.User
             var Users = _userInterface.GetUsers();
             return Ok(Users);
         }
-     
+        [HttpGet]
+        public IActionResult UserDetail(Guid id)
+        {
+            var Users = _userInterface.GetUserData(id);
+            return Ok(Users);
+        }
         [HttpPost]
         public IActionResult UserDelete(Guid id)
         {
