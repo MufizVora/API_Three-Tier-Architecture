@@ -19,42 +19,40 @@ namespace Business_Access_Layer.Validation
             _context = context;
 
 
-            RuleFor(x => x.AdminId).NotEmpty().WithMessage("AdminId is required.");
+            RuleFor(x => x.AdminId)
+                .NotEmpty().WithMessage("AdminId is required.");
 
 
-            RuleFor(x => x.CategoryId).NotEmpty().WithMessage("CategoryId is required.");
+            RuleFor(x => x.CategoryId)
+                .NotEmpty().WithMessage("CategoryId is required.");
 
 
-            RuleFor(x => x.ProductName).NotEmpty().WithMessage("Product Name is required.");
+            RuleFor(x => x.ProductName)
+                .NotEmpty().WithMessage("Product Name is required.")
+                // Custom rule for ProductName length
+                .MaximumLength(100).WithMessage("Product Name cannot be longer than 100 characters.");
 
 
-            RuleFor(x => x.ProductPrice).GreaterThan(0).WithMessage("Product Price must be greater than zero.");
+            RuleFor(x => x.ProductPrice)
+                .NotEmpty().WithMessage("Product Price is required.")
+                .GreaterThan(0).WithMessage("Product Price must be greater than zero.");
 
 
-            RuleFor(x => x.ProductDescription).NotEmpty().WithMessage("Product Description is required.");
+            RuleFor(x => x.ProductDescription)
+                .NotEmpty().WithMessage("Product Description is required.")
+                // Custom rule for ProductDescription length
+                .MaximumLength(500).WithMessage("Product Description cannot be longer than 500 characters.");
 
 
-            RuleFor(x => x.Image).NotEmpty().WithMessage("Image is required.")
-            .Must(BeValidBase64).WithMessage("Image must be a valid base64 string.")
-            .Must(BeValidBase64Image).WithMessage("Image must be a valid JPG or PNG image.");
+            RuleFor(x => x.Image)
+                .NotEmpty().WithMessage("Image is required.")
+                .Must(BeValidBase64).WithMessage("Image must be a valid base64 string.")
+                .Must(BeValidBase64Image).WithMessage("Image must be a valid JPG or PNG image.");
 
 
-
-            RuleFor(x => x.OfferPrice).GreaterThan(0).When(x => x.IsOffer).WithMessage("Offer Price must be greater than zero if IsOffer is true.");
-
-
-            // Custom rule for checking Offer Price only if IsOffer is true
-            RuleFor(x => x)
-                .Must(x => !x.IsOffer || x.OfferPrice > 0)
-                .WithMessage("Offer Price must be greater than zero if IsOffer is true.");
-
-
-            // Custom rule for ProductName length
-            RuleFor(x => x.ProductName).MaximumLength(100).WithMessage("Product Name cannot be longer than 100 characters.");
-
-
-            // Custom rule for ProductDescription length
-            RuleFor(x => x.ProductDescription).MaximumLength(500).WithMessage("Product Description cannot be longer than 500 characters.");
+            //RuleFor(x => x.OfferPrice)
+            //    .NotEmpty().WithMessage("Offer Price is required.")
+            //    .GreaterThan(0).WithMessage("Offer Price must be greater than zero if IsOffer is true.");
         }
         private bool BeValidBase64(string? image)
         {

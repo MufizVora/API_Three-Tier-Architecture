@@ -28,41 +28,6 @@ namespace Business_Access_Layer.Service.Product
             _mapper = mapper;
             _multipleimageUtility = multipleImageUtility;
         }
-        //public async Task<string> ProductCreate(ProductDTO product)
-        //{
-        //    // Check if both category and base64String are provided
-        //    if (product == null || string.IsNullOrEmpty(product.Image))
-        //    {
-        //        return "Failed";
-        //    }
-        //    var response = "";
-
-        //    try
-        //    {
-        //        var filepath = _multipleimageUtility.SaveBase64Images(product.Image);
-        //        product.Image = filepath;
-
-        //        if (string.IsNullOrEmpty(filepath))
-        //        {
-        //            return "Failed"; // Image saving failed
-        //        }
-
-        //        var ProEntity = _mapper.Map<ProductApi>(product);
-        //        ProEntity.Id = Guid.NewGuid(); // Generate a new Guid
-        //        ProEntity.Image = filepath; // Assign image file path to entity property
-
-        //        _context.Products.Add(ProEntity);
-        //        _context.SaveChanges();
-
-        //        return "Success";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Error creating product: {ex.Message}");
-        //        return "Failed";
-        //    }
-        //}
-
         public async Task<string> ProductCreate(ProductDTO product)
         {
             try
@@ -71,6 +36,18 @@ namespace Business_Access_Layer.Service.Product
                 if (product == null || string.IsNullOrEmpty(product.Image))
                 {
                     return "Failed";
+                }
+
+                // If IsOffer is false, OfferPrice can be 0
+                if (!product.IsOffer && product.OfferPrice != 0)
+                {
+                    return "Failed: Offer Price must be 0 when IsOffer is false.";
+                }
+
+                // If IsOffer is true, OfferPrice cannot be 0
+                if (product.IsOffer && product.OfferPrice == 0)
+                {
+                    return "Failed: Offer Price is required when IsOffer is true.";
                 }
 
                 // Save base64 images and get file paths
