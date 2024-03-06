@@ -38,8 +38,6 @@ namespace Business_Access_Layer.Service.Category
                 return "Failed";
             }
 
-            var response = "";
-
             try
             {
                 var filepath = _image.SaveBase64Image(category.Image);
