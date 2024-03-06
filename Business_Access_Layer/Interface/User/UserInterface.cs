@@ -44,5 +44,11 @@ namespace Business_Access_Layer.Interface.User
         public string UserEdit(UserEditDTO user);
 
         public string UserDelete(Guid id);
+
+        public Task SendPasswordResetEmail(string toEmail, string resetToken);
+
+        public Task<string> ForgotPassword(string email);
+
+        public Task<string> ResetPassword(string token, string newPassword);
     }
 }

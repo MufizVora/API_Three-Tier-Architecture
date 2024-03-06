@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -222,32 +224,35 @@ namespace Business_Access_Layer.Service.User
 
         public string UserEdit(UserEditDTO user)
         {
-            var response = "";
-
             try
             {
-                var existingUser = _context.Users.Where(a => a.Id == user.Id).AsNoTracking().FirstOrDefault();
+                var existingUser = _context.Users.FirstOrDefault(a => a.Id == user.Id);
 
                 if (existingUser == null)
                 {
-                    response = "User not found";
-                    return response;
+                    return "User not found";
                 }
 
-                existingUser.Name = user.Name.Trim();
-                existingUser.Email = user.Email.Trim();
-                existingUser.PhoneNumber = user.PhoneNumber;
+                // Only update properties if they're not null or empty
+                if (!string.IsNullOrEmpty(user.Name))
+                    existingUser.Name = user.Name.Trim();
+
+                if (!string.IsNullOrEmpty(user.Email))
+                    existingUser.Email = user.Email.Trim();
+
+                if (!string.IsNullOrEmpty(user.PhoneNumber))
+                    existingUser.PhoneNumber = user.PhoneNumber;
 
                 _context.Users.Update(existingUser);
                 _context.SaveChanges();
 
-                response = "Success";
-                return response;
+                return "Success";
             }
-            catch
+            catch (Exception ex)
             {
-                response = "Failed";
-                return response;
+                // Log the exception for debugging purposes
+                Console.WriteLine($"Exception: {ex.Message}");
+                return "Failed";
             }
         }
 
@@ -283,5 +288,144 @@ namespace Business_Access_Layer.Service.User
                 return "Failed";
             }
         }
+
+        public async Task<string> ForgotPassword(string email)
+        {
+            var response = "";
+
+            try
+            {
+                var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+
+                if (user != null)
+                {
+                    // Generate a unique token (you can use Guid.NewGuid() for simplicity)
+                    string resetToken = Guid.NewGuid().ToString();
+
+                    // Store the token in the database with a timestamp for expiration
+                    user.ResetToken = resetToken;
+                    user.ResetTokenExpiration = DateTime.UtcNow.AddHours(1); // Set expiration time
+
+                    await _context.SaveChangesAsync();
+
+                    // Send an email with the password reset link
+                    await SendPasswordResetEmail(email, resetToken);
+
+                    return response = "Password reset link sent successfully";
+                }
+                else
+                {
+                    return response = "User not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Failed to send password reset link";
+            }
+        }
+        public async Task<string> ResetPassword(string token, string newPassword)
+        {
+            try
+            {
+                var user = await _context.Users.SingleOrDefaultAsync(x => x.ResetToken == token);
+
+                if (user != null)
+                {
+                    if (user.ResetTokenExpiration <= DateTime.UtcNow)
+                    {
+                        // Log or handle the case where the token is expired
+                        return "Token expired";
+                    }
+
+                    // Reset the password
+                    user.Password = Encryption.Encrypt(newPassword);
+                    user.ResetToken = "-";
+                    user.ResetTokenExpiration = null;
+
+                    await _context.SaveChangesAsync();
+
+                    return "Password reset successfully";
+                }
+                else
+                {
+                    // Log or handle the case where the user is not found or any other unexpected scenarios
+                    return "Invalid token or user not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                return "Failed to reset password";
+            }
+        }
+        public async Task SendPasswordResetEmail(string toEmail, string resetToken)
+        {
+            try
+            {
+                var smtpClient = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential("test25943026@gmail.com", "inotbtixswttcxlm"),
+                    EnableSsl = true,
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress("test25943026@gmail.com"),
+                    Subject = "Password Reset",
+                    Body = $@"
+                        <html>
+                        <head>
+                            <style>
+                                body {{
+                                    font-family: 'Arial', sans-serif;
+                                    background-color: #f4f4f4;
+                                }}
+                                .container {{
+                                    max-width: 600px;
+                                    margin: 0 auto;
+                                    padding: 20px;
+                                    background-color: #ffffff;
+                                    border: 1px solid #dddddd;
+                                    border-radius: 5px;
+                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                }}
+                                .reset-link {{
+                                    display: block;
+                                    padding: 10px;
+                                    background-color: blue;
+                                    color: #f4f4f4;
+                                    text-align: center;
+                                    text-decoration: none;
+                                    border-radius: 5px;
+                                }}
+
+                            </style>
+                        </head>
+                        <body>
+                            <div class='container'>
+                                <p>Hello,</p>
+                                <p>Click the following link to reset your password:</p>
+                                <center><a href='https://www.example.com/password-reset?token={resetToken}'><button  class='reset-link'>Reset Password</button></a></center>
+         
+                            </div>
+                                <p style='Color:#D3D3D3'>This link will expire within 1 hour</p>
+                        </body>
+                        </html>",
+                    IsBodyHtml = true,
+                };
+
+                mailMessage.To.Add(toEmail);
+
+
+                smtpClient.Send(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (log, etc.)
+                throw new Exception("Failed to send email", ex);
+            }
+        }
+
     }
 }

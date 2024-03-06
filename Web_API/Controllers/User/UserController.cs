@@ -136,5 +136,27 @@ namespace Web_API.Controllers.User
                 return StatusCode(500, new { message = "An Error occurred while processing your request. Please try again later." });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var response = await _userInterface.ForgotPassword(email);
+            if (response == "Password reset link sent successfully")
+            {
+                return Ok(new { message = "Successfully Link Sent. "});
+            }
+            return BadRequest(new { message = "Something is fishy! Try again later." });
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string ResetToken, string Password)
+        {
+            var response = await _userInterface.ResetPassword(ResetToken, Password);
+
+            if (response == "Password reset successfully")
+            {
+                return Ok(new { message = "Successfully Reset Password. "});
+            }
+            return BadRequest(new { message = "Something is fishy! Try again later." });
+        }
+
     }
 }

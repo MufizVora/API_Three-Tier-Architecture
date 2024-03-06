@@ -26,5 +26,10 @@ namespace Data_Access_Layer.Models.UserModel
 
         [Required(ErrorMessage = "Enter Your Phone Number")]
         public string? PhoneNumber { get; set; }
+
+        public string? ResetToken { get; set; }
+
+        public DateTime? ResetTokenExpiration { get; set; }
+
     }
 }

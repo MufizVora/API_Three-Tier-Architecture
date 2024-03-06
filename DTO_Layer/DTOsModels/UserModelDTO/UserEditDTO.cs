@@ -11,14 +11,10 @@ namespace DTO_Layer.DTOsModels.UserModelDTO
     {
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Enter Your UserName")]
         public string? Name { get; set; }
 
-
-        [Required(ErrorMessage = "Enter Your Email Address")]
         public string? Email { get; set; }
 
-        [Required(ErrorMessage = "Enter Your Phone Number")]
         public string? PhoneNumber { get; set; }
     }
 }
