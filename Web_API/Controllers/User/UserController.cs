@@ -91,6 +91,29 @@ namespace Web_API.Controllers.User
             return Ok(Users);
         }
         [HttpPost]
+        public IActionResult UserEdit(UserEditDTO user)
+        {
+            var response = "";
+
+            try
+            {
+                response = _userInterface.UserEdit(user);
+
+                if (response == "Success")
+                {
+                    return Json(new { message = "Successfully Edited User." });
+                }
+                else
+                {
+                    return BadRequest(new { message = "There is something wrong! try again later." });
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An Error occurred while processing your request. Please try again later." });
+            }
+        }
+        [HttpPost]
         public IActionResult UserDelete(Guid id)
         {
             var response = "";

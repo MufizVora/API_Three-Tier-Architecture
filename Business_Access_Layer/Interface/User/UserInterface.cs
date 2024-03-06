@@ -41,6 +41,8 @@ namespace Business_Access_Layer.Interface.User
 
         public UserApi GetUserData(Guid id);
 
+        public string UserEdit(UserEditDTO user);
+
         public string UserDelete(Guid id);
     }
 }

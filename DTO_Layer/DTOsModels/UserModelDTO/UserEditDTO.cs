@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DTO_Layer.DTOsModels.UserModelDTO
 {
-    public class UserEdit
+    public class UserEditDTO
     {
         public Guid Id { get; set; }
 

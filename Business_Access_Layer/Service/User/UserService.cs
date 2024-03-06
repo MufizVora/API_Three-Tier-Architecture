@@ -5,6 +5,7 @@ using Data_Access_Layer.Migrations;
 using Data_Access_Layer.Models.CategoryModel;
 using Data_Access_Layer.Models.UserModel;
 using DTO_Layer.DTOsModels.UserModelDTO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -217,6 +218,37 @@ namespace Business_Access_Layer.Service.User
         {
             var data = _context.Users.FirstOrDefault(a => a.Id == id);
             return data;
+        }
+
+        public string UserEdit(UserEditDTO user)
+        {
+            var response = "";
+
+            try
+            {
+                var existingUser = _context.Users.Where(a => a.Id == user.Id).AsNoTracking().FirstOrDefault();
+
+                if (existingUser == null)
+                {
+                    response = "User not found";
+                    return response;
+                }
+
+                existingUser.Name = user.Name.Trim();
+                existingUser.Email = user.Email.Trim();
+                existingUser.PhoneNumber = user.PhoneNumber;
+
+                _context.Users.Update(existingUser);
+                _context.SaveChanges();
+
+                response = "Success";
+                return response;
+            }
+            catch
+            {
+                response = "Failed";
+                return response;
+            }
         }
 
         public string UserDelete(Guid id)
